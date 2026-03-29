@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import coachAvatar from "./assets/coach-avatar.png";
+import cueLogoFull from "./assets/cue-logo-full.svg";
+import cueLogoIcon from "./assets/cue-logo-icon.svg";
 
 const STOP_WORDS = new Set([
   "about",
@@ -1031,6 +1033,13 @@ function CoachAvatar({ size = "md", label = "Cue Coach" }) {
   );
 }
 
+function CueLogo({ variant = "full", className = "", alt = "Cue" }) {
+  const src = variant === "icon" ? cueLogoIcon : cueLogoFull;
+  const resolvedAlt = variant === "icon" ? `${alt} icon` : alt;
+
+  return <img src={src} alt={resolvedAlt} className={`block h-auto max-w-full object-contain ${className}`.trim()} />;
+}
+
 function SectionKicker({ children }) {
   return <p className="text-[11px] uppercase tracking-[0.28em] text-[#1F1F1F]">{children}</p>;
 }
@@ -1230,7 +1239,7 @@ export default function App() {
   const coachShowsLiveGuidance = coachFeedbackStyle === "live";
   const activeCoachCueVisible = cueState.cueVisible;
   const coachCueDisplay =
-    cueState.cueType === "icon" ? cueState.cueIcon || cueState.currentCue : cueState.cueKeyword || cueState.currentCue;
+    cueState.cueType === "text" ? cueState.cueKeyword || cueState.currentCue : "";
   const historyForgottenPoints = useMemo(
     () =>
       Object.values(coachHistory.pointStats || {})
@@ -2340,12 +2349,12 @@ export default function App() {
                       {activeCoachCueVisible ? (
                         <div className="pointer-events-none absolute right-4 top-4 flex flex-col items-end gap-2">
                           <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#333333]/92 text-white shadow-[0_18px_34px_rgba(51,51,51,0.2)] ring-1 ring-white/20">
-                            <span className="text-2xl leading-none">{cueState.cueIcon || "C"}</span>
+                            <CueLogo variant="icon" alt="" className="h-8 w-8" />
                           </div>
                           <div className="min-w-[7.5rem] max-w-[11rem] rounded-2xl bg-[#D95C5C] px-4 py-3 text-sm font-semibold text-white shadow-[0_18px_34px_rgba(217,92,92,0.28)] ring-1 ring-[#333333]/8">
                             <div className="flex items-center gap-2">
-                              {cueState.cueIcon ? <span className="text-2xl leading-none">{cueState.cueIcon}</span> : null}
-                              <span>{coachCueDisplay}</span>
+                              <CueLogo variant="icon" alt="" className="h-6 w-6 shrink-0" />
+                              <span>{coachCueDisplay || "Cue ready"}</span>
                             </div>
                           </div>
                         </div>
@@ -2611,15 +2620,13 @@ export default function App() {
 
           <div className="flex flex-col items-end gap-2">
             <div className="flex h-14 w-14 items-center justify-center rounded-full bg-black/85 text-white shadow-2xl ring-1 ring-white/10">
-              <span className="text-xs font-semibold uppercase tracking-[0.2em]">
-                {cueState.cueVisible && cueState.cueType === "icon" && cueState.cueIcon ? cueState.cueIcon : cueState.cueVisible ? "Cue" : "C"}
-              </span>
+              <CueLogo variant="icon" alt="" className="h-8 w-8" />
             </div>
             {cueState.cueVisible ? (
               <div className="min-w-[8rem] max-w-[16rem] rounded-2xl bg-amber-300 px-4 py-3 text-sm font-semibold text-black shadow-2xl ring-1 ring-black/10">
                 <div className="flex items-center gap-2">
-                  {cueState.cueIcon ? <span className="text-2xl leading-none">{cueState.cueIcon}</span> : null}
-                  <span>{cueState.cueType === "icon" ? cueState.cueIcon || cueState.currentCue : cueState.cueKeyword || cueState.currentCue}</span>
+                  <CueLogo variant="icon" alt="" className="h-6 w-6 shrink-0" />
+                  <span>{cueState.cueType === "text" ? cueState.cueKeyword || cueState.currentCue : "Cue ready"}</span>
                 </div>
               </div>
             ) : null}
@@ -2728,11 +2735,8 @@ export default function App() {
         <header className="sticky top-0 z-30 border-b border-white/60 bg-white/68 backdrop-blur-xl">
           <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 sm:px-8 lg:px-10">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#333333] text-sm font-semibold text-white shadow-[0_10px_30px_rgba(51,51,51,0.16)]">
-                C
-              </div>
               <div>
-                <p className="font-semibold tracking-tight">Cue</p>
+                <CueLogo className="h-11 sm:h-12" />
                 <p className="text-xs uppercase tracking-[0.28em] leading-5 text-[#1F1F1F]">
                   <span className="block">every point,</span>
                   <span className="block">on point.</span>
@@ -3086,7 +3090,7 @@ export default function App() {
           <footer id="contact" className="mt-24 border-t border-[#B0BEC5]/35 pt-8">
             <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
               <div>
-                <p className="font-semibold tracking-tight">Cue</p>
+                <CueLogo className="h-12" />
                 <p className="mt-2 text-sm leading-6 text-[#333333]/68">
                   every point,<br />
                   on point.
