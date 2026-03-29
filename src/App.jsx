@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import coachAvatar from "./assets/coach-avatar.png";
-import cueLogo from "./assets/cue-logo-transparent.png";
-import cueLogoIcon from "./assets/cue-logo-icon-transparent.png";
+import cueLogo from "./assets/cue-logo.png";
 
 const STOP_WORDS = new Set([
   "about",
@@ -1033,9 +1032,8 @@ function CoachAvatar({ size = "md", label = "Cue Coach" }) {
   );
 }
 
-function CueLogo({ variant = "full", className = "", alt = "Cue" }) {
-  const src = variant === "icon" ? cueLogoIcon : cueLogo;
-  return <img src={src} alt={alt} className={`block h-auto max-w-full object-contain ${className}`.trim()} />;
+function CueLogo({ className = "", alt = "Cue" }) {
+  return <img src={cueLogo} alt={alt} className={`block h-full w-full object-contain object-center ${className}`.trim()} />;
 }
 
 function SectionKicker({ children }) {
@@ -2346,12 +2344,14 @@ export default function App() {
                       <canvas ref={coachPdfCanvasRef} className="block h-auto max-w-full shadow-[0_18px_40px_rgba(176,190,197,0.28)]" />
                       {activeCoachCueVisible ? (
                         <div className="pointer-events-none absolute right-4 top-4 flex flex-col items-end gap-2">
-                          <div className="flex h-14 w-14 items-center justify-center">
-                            <CueLogo variant="icon" alt="Cue" className="h-10 w-10" />
+                          <div className="flex h-12 w-16 items-center justify-center">
+                            <CueLogo alt="Cue" className="max-h-full max-w-full" />
                           </div>
                           <div className="min-w-[7.5rem] max-w-[11rem] rounded-2xl bg-[#D95C5C] px-4 py-3 text-sm font-semibold text-white shadow-[0_18px_34px_rgba(217,92,92,0.28)] ring-1 ring-[#333333]/8">
                             <div className="flex items-center gap-2">
-                              <CueLogo variant="icon" alt="Cue" className="h-6 w-6 shrink-0" />
+                              <span className="flex h-6 w-10 shrink-0 items-center justify-center">
+                                <CueLogo alt="Cue" className="max-h-full max-w-full" />
+                              </span>
                               <span>{coachCueDisplay || "Cue ready"}</span>
                             </div>
                           </div>
@@ -2617,13 +2617,15 @@ export default function App() {
           ) : null}
 
           <div className="flex flex-col items-end gap-2">
-            <div className="flex h-14 w-14 items-center justify-center">
-              <CueLogo variant="icon" alt="Cue" className="h-10 w-10" />
+            <div className="flex h-12 w-16 items-center justify-center">
+              <CueLogo alt="Cue" className="max-h-full max-w-full" />
             </div>
             {cueState.cueVisible ? (
               <div className="min-w-[8rem] max-w-[16rem] rounded-2xl bg-amber-300 px-4 py-3 text-sm font-semibold text-black shadow-2xl ring-1 ring-black/10">
                 <div className="flex items-center gap-2">
-                  <CueLogo variant="icon" alt="Cue" className="h-6 w-6 shrink-0" />
+                  <span className="flex h-6 w-10 shrink-0 items-center justify-center">
+                    <CueLogo alt="Cue" className="max-h-full max-w-full" />
+                  </span>
                   <span>{cueState.cueType === "text" ? cueState.cueKeyword || cueState.currentCue : "Cue ready"}</span>
                 </div>
               </div>
@@ -2734,7 +2736,9 @@ export default function App() {
           <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 sm:px-8 lg:px-10">
             <div className="flex items-center gap-3">
               <div>
-                <CueLogo className="h-11 sm:h-12" />
+                <div className="flex h-11 w-28 items-center sm:h-12 sm:w-32">
+                  <CueLogo className="max-h-full max-w-full" />
+                </div>
                 <p className="text-xs uppercase tracking-[0.28em] leading-5 text-[#1F1F1F]">
                   <span className="block">every point,</span>
                   <span className="block">on point.</span>
