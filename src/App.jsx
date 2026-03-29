@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import coachAvatar from "./assets/coach-avatar.png";
-import cueLogoFull from "./assets/cue-logo-full.svg";
-import cueLogoIcon from "./assets/cue-logo-icon.svg";
+import cueLogo from "./assets/cue-logo.png";
 
 const STOP_WORDS = new Set([
   "about",
@@ -1034,10 +1033,20 @@ function CoachAvatar({ size = "md", label = "Cue Coach" }) {
 }
 
 function CueLogo({ variant = "full", className = "", alt = "Cue" }) {
-  const src = variant === "icon" ? cueLogoIcon : cueLogoFull;
-  const resolvedAlt = variant === "icon" ? `${alt} icon` : alt;
+  if (variant === "icon") {
+    return (
+      <span className={`relative inline-block overflow-hidden ${className}`.trim()}>
+        <img
+          src={cueLogo}
+          alt={alt}
+          className="absolute left-0 top-1/2 h-full max-w-none -translate-y-1/2"
+          style={{ width: "210%" }}
+        />
+      </span>
+    );
+  }
 
-  return <img src={src} alt={resolvedAlt} className={`block h-auto max-w-full object-contain ${className}`.trim()} />;
+  return <img src={cueLogo} alt={alt} className={`block h-auto max-w-full object-contain ${className}`.trim()} />;
 }
 
 function SectionKicker({ children }) {
@@ -3087,16 +3096,9 @@ export default function App() {
             </div>
           </section>
 
-          <footer id="contact" className="mt-24 border-t border-[#B0BEC5]/35 pt-8">
-            <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
-              <div>
-                <CueLogo className="h-12" />
-                <p className="mt-2 text-sm leading-6 text-[#333333]/68">
-                  every point,<br />
-                  on point.
-                </p>
-              </div>
-              <div className="grid gap-2 text-sm text-[#333333]/78 sm:text-right">
+          <footer id="contact" className="mt-20 border-t border-[#B0BEC5]/35 pt-6">
+            <div className="flex justify-center sm:justify-end">
+              <div className="grid gap-2 text-center text-sm text-[#333333]/78 sm:text-right">
                 <a href="mailto:hala@cue.ae" className="transition hover:text-[#333333]">hala@cue.ae</a>
                 <a href="mailto:nada@cue.ae" className="transition hover:text-[#333333]">nada@cue.ae</a>
                 <a href="mailto:zainah@cue.ae" className="transition hover:text-[#333333]">zainah@cue.ae</a>
