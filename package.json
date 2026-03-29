@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "concurrently \"npm:server\" \"vite\"",
     "server": "node server/index.mjs",
+    "start": "node server/index.mjs",
     "build": "vite build",
     "preview": "vite preview"
   },

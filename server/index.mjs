@@ -1,13 +1,31 @@
 import http from "node:http";
+import fs from "node:fs";
+import path from "node:path";
 import process from "node:process";
+import { fileURLToPath } from "node:url";
 import OpenAI from "openai";
 
 const port = Number(process.env.PORT || 8787);
-const host = process.env.HOST || "127.0.0.1";
+const host = process.env.HOST || "0.0.0.0";
 const model = process.env.OPENAI_MODEL || "gpt-5-mini";
 const client = process.env.OPENAI_API_KEY
   ? new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
   : null;
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const distDir = path.resolve(__dirname, "../dist");
+
+const MIME_TYPES = {
+  ".css": "text/css; charset=utf-8",
+  ".html": "text/html; charset=utf-8",
+  ".js": "text/javascript; charset=utf-8",
+  ".json": "application/json; charset=utf-8",
+  ".mjs": "text/javascript; charset=utf-8",
+  ".png": "image/png",
+  ".svg": "image/svg+xml",
+  ".woff": "font/woff",
+  ".woff2": "font/woff2",
+};
 
 function sendJson(response, statusCode, payload) {
   response.writeHead(statusCode, {
@@ -17,6 +35,22 @@ function sendJson(response, statusCode, payload) {
     "Access-Control-Allow-Headers": "Content-Type",
   });
   response.end(JSON.stringify(payload));
+}
+
+function sendFile(response, filePath) {
+  const extension = path.extname(filePath).toLowerCase();
+  const contentType = MIME_TYPES[extension] || "application/octet-stream";
+
+  fs.readFile(filePath, (error, data) => {
+    if (error) {
+      response.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" });
+      response.end("Not found.");
+      return;
+    }
+
+    response.writeHead(200, { "Content-Type": contentType });
+    response.end(data);
+  });
 }
 
 function extractJsonObject(text) {
@@ -184,6 +218,23 @@ const server = http.createServer((request, response) => {
     });
 
     return;
+  }
+
+  if (request.method === "GET" || request.method === "HEAD") {
+    const requestPath = request.url === "/" ? "/index.html" : request.url;
+    const safePath = path.normalize(requestPath).replace(/^(\.\.[/\\])+/, "");
+    const assetPath = path.join(distDir, safePath);
+
+    if (fs.existsSync(assetPath) && fs.statSync(assetPath).isFile()) {
+      sendFile(response, assetPath);
+      return;
+    }
+
+    const indexPath = path.join(distDir, "index.html");
+    if (fs.existsSync(indexPath)) {
+      sendFile(response, indexPath);
+      return;
+    }
   }
 
   sendJson(response, 404, { error: "Not found." });
