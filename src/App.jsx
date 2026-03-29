@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import coachAvatar from "./assets/coach-avatar.png";
-import cueLogo from "./assets/cue-logo.png";
+import cueLogo from "./assets/cue-logo-transparent.png";
+import cueLogoIcon from "./assets/cue-logo-icon-transparent.png";
 
 const STOP_WORDS = new Set([
   "about",
@@ -1033,20 +1034,8 @@ function CoachAvatar({ size = "md", label = "Cue Coach" }) {
 }
 
 function CueLogo({ variant = "full", className = "", alt = "Cue" }) {
-  if (variant === "icon") {
-    return (
-      <span className={`relative inline-block overflow-hidden ${className}`.trim()}>
-        <img
-          src={cueLogo}
-          alt={alt}
-          className="absolute left-0 top-1/2 h-full max-w-none -translate-y-1/2"
-          style={{ width: "210%" }}
-        />
-      </span>
-    );
-  }
-
-  return <img src={cueLogo} alt={alt} className={`block h-auto max-w-full object-contain ${className}`.trim()} />;
+  const src = variant === "icon" ? cueLogoIcon : cueLogo;
+  return <img src={src} alt={alt} className={`block h-auto max-w-full object-contain ${className}`.trim()} />;
 }
 
 function SectionKicker({ children }) {
@@ -2357,12 +2346,12 @@ export default function App() {
                       <canvas ref={coachPdfCanvasRef} className="block h-auto max-w-full shadow-[0_18px_40px_rgba(176,190,197,0.28)]" />
                       {activeCoachCueVisible ? (
                         <div className="pointer-events-none absolute right-4 top-4 flex flex-col items-end gap-2">
-                          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#333333]/92 text-white shadow-[0_18px_34px_rgba(51,51,51,0.2)] ring-1 ring-white/20">
-                            <CueLogo variant="icon" alt="" className="h-8 w-8" />
+                          <div className="flex h-14 w-14 items-center justify-center">
+                            <CueLogo variant="icon" alt="Cue" className="h-10 w-10" />
                           </div>
                           <div className="min-w-[7.5rem] max-w-[11rem] rounded-2xl bg-[#D95C5C] px-4 py-3 text-sm font-semibold text-white shadow-[0_18px_34px_rgba(217,92,92,0.28)] ring-1 ring-[#333333]/8">
                             <div className="flex items-center gap-2">
-                              <CueLogo variant="icon" alt="" className="h-6 w-6 shrink-0" />
+                              <CueLogo variant="icon" alt="Cue" className="h-6 w-6 shrink-0" />
                               <span>{coachCueDisplay || "Cue ready"}</span>
                             </div>
                           </div>
@@ -2628,13 +2617,13 @@ export default function App() {
           ) : null}
 
           <div className="flex flex-col items-end gap-2">
-            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-black/85 text-white shadow-2xl ring-1 ring-white/10">
-              <CueLogo variant="icon" alt="" className="h-8 w-8" />
+            <div className="flex h-14 w-14 items-center justify-center">
+              <CueLogo variant="icon" alt="Cue" className="h-10 w-10" />
             </div>
             {cueState.cueVisible ? (
               <div className="min-w-[8rem] max-w-[16rem] rounded-2xl bg-amber-300 px-4 py-3 text-sm font-semibold text-black shadow-2xl ring-1 ring-black/10">
                 <div className="flex items-center gap-2">
-                  <CueLogo variant="icon" alt="" className="h-6 w-6 shrink-0" />
+                  <CueLogo variant="icon" alt="Cue" className="h-6 w-6 shrink-0" />
                   <span>{cueState.cueType === "text" ? cueState.cueKeyword || cueState.currentCue : "Cue ready"}</span>
                 </div>
               </div>
